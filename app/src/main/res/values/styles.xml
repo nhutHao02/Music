@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="seekbar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Other style attributes -->
+        <item name="colorAccent">@color/orange</item> <!-- Set your desired color -->
+    </style>
+</resources>

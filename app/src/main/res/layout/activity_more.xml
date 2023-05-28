@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black"
+    android:weightSum="20"
+    tools:context=".MoreActivity">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="20dp"
+           android:orientation="horizontal"
+           android:layout_marginLeft="20dp"
+           android:layout_marginBottom="10dp"
+           >
+           <ImageView
+               android:layout_width="50dp"
+               android:layout_height="50dp"
+               android:src="@drawable/baseline_account_circle_24"
+               app:tint="@color/white" />
+           <TextView
+               android:id="@+id/moreLogin"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="Log In"
+               android:textColor="@color/orange"
+               android:textSize="30sp"
+               android:layout_marginTop="5dp"
+               android:layout_marginLeft="10dp"
+               />
+       </LinearLayout>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:background="#201F1F"
+           android:orientation="vertical"
+           >
+           <TextView
+               android:layout_marginTop="10dp"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="Account information"
+               android:layout_marginLeft="20dp"
+               android:textColor="@color/white"
+               android:textSize="20sp"
+               />
+           <LinearLayout
+               android:id="@+id/moreAcInfo"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               >
+               <ImageView
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:src="@drawable/baseline_account_circle_24"
+                   app:tint="@color/orange"
+                   android:layout_marginLeft="20dp"
+                   android:layout_marginTop="10dp" />
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="10dp"
+                   android:layout_marginTop="10dp"
+                   android:text="Account information"
+                   android:textColor="@color/white"
+                   android:textSize="17sp"
+
+                   />
+           </LinearLayout>
+           <LinearLayout
+               android:id="@+id/moreSetting"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               >
+               <ImageView
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:src="@drawable/baseline_settings_24"
+                   app:tint="@color/orange"
+                   android:layout_marginLeft="20dp"
+                   android:layout_marginTop="10dp" />
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="10dp"
+                   android:layout_marginTop="10dp"
+                   android:text="Setting"
+                   android:textColor="@color/white"
+                   android:textSize="17sp"
+
+                   />
+           </LinearLayout>
+           <LinearLayout
+               android:id="@+id/moreHistory"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               >
+               <ImageView
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:src="@drawable/baseline_history_24"
+                   app:tint="@color/orange"
+                   android:layout_marginLeft="20dp"
+                   android:layout_marginTop="10dp" />
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="10dp"
+                   android:layout_marginTop="10dp"
+                   android:text="History"
+                   android:textColor="@color/white"
+                   android:textSize="17sp"
+
+                   />
+           </LinearLayout>
+           <LinearLayout
+               android:id="@+id/moreHelp"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               >
+               <ImageView
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:src="@drawable/baseline_help_outline_24"
+                   app:tint="@color/orange"
+                   android:layout_marginLeft="20dp"
+                   android:layout_marginTop="10dp" />
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="10dp"
+                   android:layout_marginTop="10dp"
+                   android:text="Help and support"
+                   android:textColor="@color/white"
+                   android:textSize="17sp"
+
+                   />
+           </LinearLayout>
+           <LinearLayout
+               android:id="@+id/moreSendFeedback"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               >
+               <ImageView
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:src="@drawable/baseline_feedback_24"
+                   app:tint="@color/orange"
+                   android:layout_marginLeft="20dp"
+                   android:layout_marginTop="10dp" />
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="10dp"
+                   android:layout_marginTop="10dp"
+                   android:text="Send Feedback"
+                   android:textColor="@color/white"
+                   android:textSize="17sp"
+
+                   />
+           </LinearLayout>
+
+       </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4"
+            android:layout_alignParentBottom="true"
+            android:background="#201F1F"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            >
+            <LinearLayout
+                android:id="@+id/lyMyFavorites"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+
+                >
+                <ImageView
+                    android:id="@+id/icMyFavorites"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_favorite_24"
+                    app:tint="#CBD3D1D1"
+                     />
+                <TextView
+                    android:id="@+id/txtMyFavorites"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="#CBD3D1D1"
+                    android:text="My Favorites"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/lyPlayList"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <ImageView
+                    android:id="@+id/icPlayList"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_library_music_24"
+                    app:tint="#CBD3D1D1" />
+                <TextView
+                    android:id="@+id/txtPlayList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="#CBD3D1D1"
+                    android:text="Playlists"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/lySearch"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <ImageView
+                    android:id="@+id/icSearch"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_search_24"
+                    app:tint="#CBD3D1D1"
+                    />
+                <TextView
+                    android:id="@+id/txtSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="#CBD3D1D1"
+                    android:text="Search"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/lyMore"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                >
+                <ImageView
+                    android:id="@+id/icMore"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_more_horiz_24"
+                    app:tint="@color/orange"
+
+                    />
+                <TextView
+                    android:id="@+id/txtMore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="#CBD3D1D1"
+                    android:text="More"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+</LinearLayout>

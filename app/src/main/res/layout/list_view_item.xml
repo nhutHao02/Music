@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    >
+
+    <ImageView
+        android:id="@+id/imgSong"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_margin="5dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/nameSong"
+        android:layout_width="285sp"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:layout_toRightOf="@id/imgSong"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="Tên bài hát"
+        android:textSize="15sp" />
+    <TextView
+        android:id="@+id/nameAuthor"
+        android:layout_toRightOf="@id/imgSong"
+        android:layout_below="@id/nameSong"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:paddingBottom="13dp"
+        android:gravity="top"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:background="@drawable/bottom_boder_item"
+        android:text="Tên bài Tác giả" />
+    <ImageView
+        android:id="@+id/icAdd"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/baseline_add_24"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        app:tint="@color/orange" />
+</RelativeLayout>

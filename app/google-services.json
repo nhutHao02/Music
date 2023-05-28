@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "136458080681",
+    "firebase_url": "https://musicpjandroid-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "musicpjandroid",
+    "storage_bucket": "musicpjandroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136458080681:android:8a7298b5dc39ac89d974b8",
+        "android_client_info": {
+          "package_name": "com.example.musicapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "136458080681-v9bm1g3to4mdm703mpao24ra95eoi0kr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIxmXgTvTajLFdm_S_ejC3xyYUgSeErjA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "136458080681-v9bm1g3to4mdm703mpao24ra95eoi0kr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

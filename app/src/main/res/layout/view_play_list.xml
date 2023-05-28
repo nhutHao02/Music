@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    >
+
+    <ImageView
+        android:id="@+id/imgList"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="5dp"
+        android:layout_margin="5dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/nameList"
+        android:layout_width="250sp"
+        android:layout_height="50dp"
+        android:paddingTop="8dp"
+        android:layout_toRightOf="@id/imgList"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="Tên list"
+        android:textSize="17sp" />
+    <TextView
+        android:id="@+id/sizeList"
+        android:layout_toRightOf="@id/imgList"
+        android:layout_below="@id/nameList"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="13dp"
+        android:gravity="top"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:background="@drawable/bottom_boder_item"
+        android:text="Số bài hát" />
+
+    <Button
+        android:id="@+id/goList"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/nameList"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/_arrow_right" />
+</RelativeLayout>
