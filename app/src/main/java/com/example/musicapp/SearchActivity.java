@@ -8,15 +8,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,6 +32,9 @@ public class SearchActivity extends AppCompatActivity {
     ListView lvTracks1,lvTracks2, lvTracks3,lvNewTracks1,lvNewTracks2;
     LinearLayout nhacEDM,nhacDance,nhacJazz,nhacRock,nhacPop,topVPop,topEDM,topUSUK,topJPop,lyMyfavorites,lyPlaylist,lyMore;
     TextView seeMoreTracks, seeMoreNewTracks;
+    EditText searchEditText;
+    ImageView searchButton;
+    List<Song> listSearch=new ArrayList<Song>();;
     List<Song> listTopTracks=new ArrayList<Song>();
     List<Song> listTopNewTracks=new ArrayList<Song>();
     List<Song> listTopTracksItem1=new ArrayList<Song>();
@@ -212,6 +220,51 @@ public class SearchActivity extends AppCompatActivity {
 
             }
         });
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String keyword = searchEditText.getText().toString();
+
+                // Tạo một tham chiếu đến nút myFavorites trong Firebase Realtime Database
+                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("myFavorites");
+
+                // Sử dụng phương thức orderByChild và startAt để tìm kiếm bài hát theo tên
+                Query query = databaseRef.orderByChild("nameSong").startAt(keyword).endAt(keyword + "\uf8ff");
+
+                ((Query) query).addValueEventListener(new ValueEventListener() {
+                    
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // Xử lý kết quả tìm kiếm
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            // Lấy dữ liệu bài hát từ DataSnapshot
+                            String songName = dataSnapshot.child("nameSong").getValue(String.class);
+                            String author = dataSnapshot.child("author").getValue(String.class);
+                            String img = dataSnapshot.child("img").getValue(String.class);
+                            String link = dataSnapshot.child("link").getValue(String.class);
+
+                            Song s=new Song(img,link,songName,author);
+                            listSearch.add(s);
+                        }
+                        if (listSearch.size()==0){
+                            Toast.makeText(SearchActivity.this, "Song is not available", Toast.LENGTH_SHORT).show();
+                        }
+                        if (listSearch.size()>0){
+                            startActivity(new Intent(SearchActivity.this,ListSongActivity.class)
+                                    .putExtra("ListSearch", (Serializable) listSearch).putExtra("NAMEMENU","Search")
+                                    .putExtra("ly","SearchActivity"));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Xử lý khi có lỗi xảy ra
+//                        Toast.makeText(SearchActivity.this, "Song is not available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
 
     }
     private void loadSongs() {
@@ -314,6 +367,9 @@ public class SearchActivity extends AppCompatActivity {
         lyMyfavorites=(LinearLayout) findViewById(R.id.lyMyFavorites);
         lyPlaylist=(LinearLayout) findViewById(R.id.lyPlayList);
         lyMore=(LinearLayout) findViewById(R.id.lyMore);
+        searchButton=(ImageView) findViewById(R.id.btnSearch);
+        searchEditText=(EditText) findViewById(R.id.editTxtSearch);
+
 
     }
 }

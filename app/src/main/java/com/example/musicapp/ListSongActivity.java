@@ -24,6 +24,7 @@ import java.util.List;
 public class ListSongActivity extends AppCompatActivity {
     ListView lv;
     List<Song> listSong=new ArrayList<Song>();
+    List<Song> listSongSearch=new ArrayList<Song>();
     LinearLayout lyFavorites, lyPlaylist,lyMore,lySearch;
     ListViewSongAdapter adapter=null;
     DatabaseReference mDatabase;
@@ -38,16 +39,24 @@ public class ListSongActivity extends AppCompatActivity {
         String nameList=i.getStringExtra("NAMELIST");
         String nameMenu=i.getStringExtra("NAMEMENU");
         String nameLy=i.getStringExtra("ly");
+        listSongSearch= (List<Song>) i.getSerializableExtra("ListSearch");
         setTitle(nameMenu);
-        loadSongs(nameList);
-        adapter=new ListViewSongAdapter(ListSongActivity.this,R.layout.list_view_item,listSong);
-        lv.setAdapter(adapter);
+        if(listSongSearch==null) {
+            loadSongs(nameList);
+            adapter = new ListViewSongAdapter(ListSongActivity.this, R.layout.list_view_item, listSong);
 
+        }
+        if (listSongSearch!=null){
+            adapter = new ListViewSongAdapter(ListSongActivity.this, R.layout.list_view_item, listSongSearch);
+        }
+        lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Song song = (Song) lv.getItemAtPosition(i);
-
+                if (listSongSearch!=null){
+                    listSong=listSongSearch;
+                }
                 startActivity(new Intent(ListSongActivity.this,PlayerActivity.class)
                         .putExtra("MyListSong", (Serializable) listSong)
                         .putExtra("pos",i).putExtra("Activity","com.example.musicapp."+nameLy));
