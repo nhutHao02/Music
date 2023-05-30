@@ -23,13 +23,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity {
     DatabaseReference mDatabase;
     List<Song> myFavorites=new ArrayList<Song>();
     ListView lvSong;
@@ -39,13 +38,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("History");
         mDatabase = FirebaseDatabase.getInstance().getReference();
         //ánh xạ
         anhXa();
         //Load data
-        loadSongs();
+        loadSongHistorys();
 
-        adapter=new ListViewSongAdapter(MainActivity.this,R.layout.list_view_item,myFavorites);
+        adapter=new ListViewSongAdapter(HistoryActivity.this,R.layout.item_history,myFavorites);
         lvSong.setAdapter(adapter);
 
         //event list View
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Song song = (Song) lvSong.getItemAtPosition(i);
-                new Song().createSongHistory(song,mDatabase);
-                startActivity(new Intent(MainActivity.this,PlayerActivity.class)
+
+                startActivity(new Intent(HistoryActivity.this,PlayerActivity.class)
                         .putExtra("MyListSong", (Serializable) myFavorites)
                         .putExtra("pos",i).putExtra("Activity","com.example.musicapp.MainActivity"));
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Tạo Intent để chuyển đến Activity mục tiêu
-                Intent intent = new Intent(MainActivity.this, PlayListActivity.class);
+                Intent intent = new Intent(HistoryActivity.this, PlayListActivity.class);
                 // Chuyển đến Activity mục tiêu
                 startActivity(intent);
             }
@@ -74,23 +74,22 @@ public class MainActivity extends AppCompatActivity {
         lyMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, MoreActivity.class));
+                startActivity(new Intent(HistoryActivity.this, MoreActivity.class));
             }
         });
         lySearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SearchActivity.class));
+                startActivity(new Intent(HistoryActivity.this, SearchActivity.class));
             }
         });
 
 
 
-
     }
 
-    private void loadSongs() {
-        mDatabase.child("myFavorites").addChildEventListener(new ChildEventListener() {
+    private void loadSongHistorys() {
+        mDatabase.child("history").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Song songs=snapshot.getValue(Song.class);

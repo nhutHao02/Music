@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class PlayListActivity extends AppCompatActivity {
-    ListView listPlayList;
+    ListView listViewPlay1;
     ArrayList<PlayList> arrayList = new ArrayList<>();
     ArrayList<String> nameLPlayList = new ArrayList<>();
     PlayListAdapter adapter;
@@ -43,41 +44,16 @@ public class PlayListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_list);
         setTitle("PlayLists");
-        ListView listViewPlay = findViewById(R.id.listViewPlay);
         LinearLayout menuBot = findViewById(R.id.menuBot);
-
-        // Lấy chiều cao của LinearLayout
-        int menuBotHeight = menuBot.getHeight();
-
-        // Lấy chiều cao màn hình
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenHeight = displayMetrics.heightPixels;
-
-        // Thiết lập chiều cao của ListView
-        int listViewHeight = screenHeight - menuBotHeight;
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, listViewHeight);
-        listViewPlay.setLayoutParams(layoutParams);
+        getAnhXa();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         nameLPlayList = new ArrayList<>();
         loadLists();
 
-        Anhxa();
-        adapter = new PlayListAdapter(this,R.layout.view_play_list, arrayList);
-        listPlayList.setAdapter(adapter);
-        listPlayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Song song = (Song) listPlayList.getItemAtPosition(i);
-//                String namePlay = nameLPlayList.get(i);
-                PlayList list = arrayList.get(i);
-                startActivity(new Intent(PlayListActivity.this,PlayList.class)
-                        .putExtra("MyListSong", (Serializable) list.getList())
-                        .putExtra("name", (Serializable) list.getName())
-                        .putExtra("pos",i));
 
-            }
-        });
+        adapter = new PlayListAdapter(PlayListActivity.this,R.layout.view_play_list, arrayList);
+        listViewPlay1.setAdapter(adapter);
+
         Button btn_add = findViewById(R.id.addPlayList);
         btn_add.setOnClickListener(new AdapterView.OnClickListener(){
 
@@ -87,6 +63,17 @@ public class PlayListActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public void onItemClick(View view) {
+        // Xử lý sự kiện click vào item trong ListView
+        int position = listViewPlay1.getPositionForView(view);
+        PlayList selectedItem = arrayList.get(position);
+        System.out.println("P"+position);
+        System.out.println("A"+selectedItem);
+        startActivity(new Intent(PlayListActivity.this,ListSongActivity.class)
+                .putExtra("NAMELIST","myFavorites").putExtra("NAMEMENU","EDM")
+                .putExtra("ly","PlayListActivity"));
+        // Xử lý logic với selectedItem
     }
     private void showCreatePlaylistDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -122,7 +109,7 @@ public class PlayListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 long count = dataSnapshot.getChildrenCount(); // Lấy số lượng child nodes hiện tại
-                String key = String.format("%02d", count + 1); // Định dạng số thứ tự
+                String key = String.format("%02d", count); // Định dạng số thứ tự
 
                 // Thêm mới vào playlist
                 playlistsRef.child(key).child("nameList").setValue(playlistName);
@@ -193,8 +180,8 @@ public class PlayListActivity extends AppCompatActivity {
                     System.out.println("song" +songs);
                     listSong.add(songs);
                     numSong++;
-                    arrayList.get(numChildren).setSize(numSong);
-                    arrayList.get(numChildren).setList(listSong);
+                    arrayList.get(numChildren-1).setSize(numSong);
+                    arrayList.get(numChildren-1).setList(listSong);
                     adapter.notifyDataSetChanged();
 
                 }
@@ -221,11 +208,8 @@ public class PlayListActivity extends AppCompatActivity {
             });
 
     }
-    private void Anhxa(){
-        listPlayList = (ListView) findViewById(R.id.listViewPlay);
-
-        arrayList.add(new PlayList("list1",3,"https://firebasestorage.googleapis.com/v0/b/musicpjandroid.appspot.com/o/img%2FRight%20Now%20Na%20Na%20Na%20Lyrics.jpg?alt=media&token=41c70495-7128-49da-b0e0-e9e6d8f16dcb"));
-
+    public void getAnhXa(){
+        listViewPlay1 = (ListView) findViewById(R.id.listViewPlay);
     }
     public  int getNumSong(){
         return 0;

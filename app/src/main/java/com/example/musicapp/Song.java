@@ -1,5 +1,12 @@
 package com.example.musicapp;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.Serializable;
 
 public class Song implements Serializable {
@@ -48,5 +55,23 @@ public class Song implements Serializable {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+    public void createSongHistory(Song song,  DatabaseReference mDatabase) {
+        DatabaseReference accounts = mDatabase.child("history");
+        accounts.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long count = dataSnapshot.getChildrenCount(); // Lấy số lượng child nodes hiện tại
+                String key = String.format("%02d", count + 1); // Định dạng số thứ tự
+                // Tạo đối tượng Account
+
+                // Thêm mới vào playlist
+                accounts.child(key).setValue(song);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
     }
 }
