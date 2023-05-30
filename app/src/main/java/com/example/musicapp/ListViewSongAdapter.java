@@ -44,7 +44,7 @@ public class ListViewSongAdapter extends BaseAdapter {
     private List<Song> listSong;
     DatabaseReference mDatabase;
     private ArrayList<String> playlistList;
-    private DatabaseReference mDatabase;
+
     private ArrayAdapter<String> playlistAdapter;
 
     public ListViewSongAdapter(Context context, int layout, List<Song> listSong) {
