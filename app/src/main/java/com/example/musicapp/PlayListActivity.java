@@ -41,7 +41,7 @@ public class PlayListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_view_play);
+        setContentView(R.layout.activity_play_list);
         setTitle("PlayLists");
         ListView listViewPlay = findViewById(R.id.listViewPlay);
         LinearLayout menuBot = findViewById(R.id.menuBot);
