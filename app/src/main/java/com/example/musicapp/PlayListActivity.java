@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,12 +25,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
 public class PlayListActivity extends AppCompatActivity {
     ListView listPlayList;
-    LinearLayout lyMore, lySearch, lyMyFavorite;
     ArrayList<PlayList> arrayList = new ArrayList<>();
     ArrayList<String> nameLPlayList = new ArrayList<>();
     PlayListAdapter adapter;
@@ -42,7 +41,7 @@ public class PlayListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_list);
+        setContentView(R.layout.list_view_play);
         setTitle("PlayLists");
         ListView listViewPlay = findViewById(R.id.listViewPlay);
         LinearLayout menuBot = findViewById(R.id.menuBot);
@@ -64,24 +63,21 @@ public class PlayListActivity extends AppCompatActivity {
         loadLists();
 
         Anhxa();
-        adapter = new PlayListAdapter(PlayListActivity.this,R.layout.view_play_list, arrayList);
+        adapter = new PlayListAdapter(this,R.layout.view_play_list, arrayList);
         listPlayList.setAdapter(adapter);
         listPlayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(PlayListActivity.this, "HEEEEEEEEEEE", Toast.LENGTH_SHORT).show();
+//                Song song = (Song) listPlayList.getItemAtPosition(i);
+//                String namePlay = nameLPlayList.get(i);
+                PlayList list = arrayList.get(i);
+                startActivity(new Intent(PlayListActivity.this,PlayList.class)
+                        .putExtra("MyListSong", (Serializable) list.getList())
+                        .putExtra("name", (Serializable) list.getName())
+                        .putExtra("pos",i));
+
             }
         });
-//        listPlayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                String nameList=arrayList.get(i).getName();
-//                startActivity(new Intent(PlayListActivity.this,ListSongActivity.class)
-//                        .putExtra("NAMELIST","myFavorites")
-//                        .putExtra("NAMEMENU",nameList).putExtra("ly","PlayListActivity"));
-//
-//            }
-//        });
         Button btn_add = findViewById(R.id.addPlayList);
         btn_add.setOnClickListener(new AdapterView.OnClickListener(){
 
@@ -122,7 +118,6 @@ public class PlayListActivity extends AppCompatActivity {
     }
     private void createPlaylist(String playlistName) {
         DatabaseReference playlistsRef = mDatabase.child("playList");
-
         playlistsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -136,24 +131,6 @@ public class PlayListActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Xử lý khi có lỗi xảy ra
-            }
-        });
-        lyMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(PlayListActivity.this, MoreActivity.class));
-            }
-        });
-        lySearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(PlayListActivity.this, SearchActivity.class));
-            }
-        });
-        lyMyFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(PlayListActivity.this, MainActivity.class));
             }
         });
     }
@@ -197,8 +174,6 @@ public class PlayListActivity extends AppCompatActivity {
 
             }
         });
-
-
 
 
 
@@ -248,9 +223,7 @@ public class PlayListActivity extends AppCompatActivity {
     }
     private void Anhxa(){
         listPlayList = (ListView) findViewById(R.id.listViewPlay);
-        lyMore=(LinearLayout) findViewById(R.id.lyMore);
-        lySearch=(LinearLayout) findViewById(R.id.lySearch);
-        lyMyFavorite=(LinearLayout) findViewById(R.id.lyMyFavorites);
+
         arrayList.add(new PlayList("list1",3,"https://firebasestorage.googleapis.com/v0/b/musicpjandroid.appspot.com/o/img%2FRight%20Now%20Na%20Na%20Na%20Lyrics.jpg?alt=media&token=41c70495-7128-49da-b0e0-e9e6d8f16dcb"));
 
     }

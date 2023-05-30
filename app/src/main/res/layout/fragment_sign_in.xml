@@ -95,6 +95,7 @@
             android:textSize="17sp" />
 
         <TextView
+            android:id="@+id/signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign Up"
@@ -103,9 +104,8 @@
             android:textStyle="bold" />
 
     </LinearLayout>
-
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/forgot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
