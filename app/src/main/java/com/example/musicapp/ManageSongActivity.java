@@ -54,7 +54,7 @@ public class ManageSongActivity extends AppCompatActivity {
     LinearLayout lyMore, lySearch, lyPlaylist;
     EditText editTextSongName, editTextImgName,editTextLinkName,editTextAuthorName;
     Button addSong;
-    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    ActivityResultLauncher<Intent> imagePickerLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +154,20 @@ public class ManageSongActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+    public void updateNewSong(Song song,String i){
+        DatabaseReference accounts = mDatabase.child("Song");
+        accounts.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                accounts.child(i).setValue(song);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
             }
         });
     }
@@ -311,16 +325,64 @@ public class ManageSongActivity extends AppCompatActivity {
             }
         });
     }
-    private static final int PERMISSION_REQUEST_CODE = 1;
+    public void updateSong(Song song,String i){
 
-//    private void requestStoragePermission() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            if (!Environment.isExternalStorageManager()) {
-//                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-//                startActivityForResult(intent, PERMISSION_REQUEST_CODE);
-//            } else {
-//                // Quyền đã được cấp, bạn có thể thực hiện các hoạt động liên quan đến bộ nhớ ở đây
-//            }
-//        }
-//    }
+        AlertDialog.Builder builder = new AlertDialog.Builder(ManageSongActivity.this);
+        builder.setTitle("Create Song");
+
+        // Tạo layout cho dialog bằng mã Java
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        editTextSongName = new EditText(this);
+        editTextSongName.setText(song.getNameSong());
+        layout.addView(editTextSongName);
+        Button selectImageButton = new Button(this);
+        selectImageButton.setText("Select Image");
+        layout.addView(selectImageButton);
+        editTextAuthorName = new EditText(this);
+        editTextAuthorName.setText(song.getAuthor());
+        layout.addView(editTextAuthorName);
+        editTextImgName = new EditText(this);
+        editTextImgName.setText(song.getImg());
+        layout.addView(editTextImgName);
+        editTextLinkName = new EditText(this);
+        editTextLinkName.setText(song.getLink());
+        layout.addView(editTextLinkName);
+        builder.setView(layout);
+        // Tạo ActivityResultLauncher trước khi set onClickListener cho nút select image
+        selectImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Tạo một Intent để chọn hình ảnh từ bộ nhớ hình ảnh
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+
+                // Sử dụng imagePickerLauncher để nhận kết quả từ Intent
+                imagePickerLauncher.launch(intent);
+            }
+        });
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Song song = new Song(editTextImgName.getText().toString(),editTextLinkName.getText().toString()
+                        ,editTextSongName.getText().toString(),editTextAuthorName.getText().toString());
+                updateSong(song,i);
+                Toast.makeText(ManageSongActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
 }

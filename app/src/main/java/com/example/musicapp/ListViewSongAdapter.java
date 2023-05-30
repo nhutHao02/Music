@@ -1,20 +1,30 @@
 package com.example.musicapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,8 +54,10 @@ public class ListViewSongAdapter extends BaseAdapter {
     private List<Song> listSong;
     DatabaseReference mDatabase;
     private ArrayList<String> playlistList;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     private ArrayAdapter<String> playlistAdapter;
+    EditText editTextSongName, editTextImgName,editTextLinkName,editTextAuthorName;
 
     public ListViewSongAdapter(Context context, int layout, List<Song> listSong) {
         this.context = context;
@@ -67,11 +79,13 @@ public class ListViewSongAdapter extends BaseAdapter {
         return 0;
     }
     private class ViewHolder{
-        ImageView img,btn, remove;
+
+        ImageView img,btn, remove,edit;
         TextView nameSong;
         TextView author;
 
     }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
@@ -85,9 +99,14 @@ public class ListViewSongAdapter extends BaseAdapter {
             holder.img      =(ImageView) view.findViewById(R.id.imgSong);
             holder.nameSong =(TextView) view.findViewById(R.id.nameSong);
             holder.author   =(TextView) view.findViewById(R.id.nameAuthor);
-            holder.btn      = (ImageView) view.findViewById(R.id.icAdd);
+            if(view.findViewById(R.id.icAdd)!= null){
+                holder.btn = (ImageView) view.findViewById(R.id.icAdd);
+            }
             if(view.findViewById(R.id.icRemove)!= null){
                 holder.remove = (ImageView) view.findViewById(R.id.icRemove);
+            }
+            if(view.findViewById(R.id.icEdit)!= null){
+                holder.edit = (ImageView) view.findViewById(R.id.icEdit);
             }
             view.setTag(holder);
         }else {
@@ -101,6 +120,21 @@ public class ListViewSongAdapter extends BaseAdapter {
         holder.author.setText(song.getAuthor());
         if(holder.img != null){
             Picasso.get().load(song.getImg()).into(holder.img);
+        }
+        if(holder.edit!=null){
+            holder.edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String indexString = "";
+                    if (i < 10) {
+                        indexString = "0" + i;
+                    } else {
+                        indexString = String.valueOf(i);
+                    }
+                 updateSong(song,indexString);
+                    notifyDataSetChanged();
+                }
+            });
         }
 
         if(holder.remove!= null){
@@ -122,9 +156,58 @@ public class ListViewSongAdapter extends BaseAdapter {
 
         return view;
     }
+    public void updateSong(Song song,String i){
+
+        imagePickerLauncher = new ManageSongActivity().imagePickerLauncher;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Update Song");
+
+        // Tạo layout cho dialog bằng mã Java
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        editTextSongName = new EditText(context);
+        editTextSongName.setText(song.getNameSong());
+        layout.addView(editTextSongName);
+        editTextAuthorName = new EditText(context);
+        editTextAuthorName.setText(song.getAuthor());
+        layout.addView(editTextAuthorName);
+        editTextImgName = new EditText(context);
+        editTextImgName.setText(song.getImg());
+        layout.addView(editTextImgName);
+        editTextLinkName = new EditText(context);
+        editTextLinkName.setText(song.getLink());
+        layout.addView(editTextLinkName);
+        builder.setView(layout);
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Song songnew = new Song(editTextImgName.getText().toString(),editTextLinkName.getText().toString()
+                        ,editTextSongName.getText().toString(),editTextAuthorName.getText().toString());
+                updateNewSong(songnew,i);
+                Toast.makeText(context, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                notifyDataSetChanged();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
-private void showPlaylistDialog(Song song) {
+
+
+
+    private void showPlaylistDialog(Song song) {
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
     builder.setTitle("Select Playlist");
 
@@ -140,7 +223,7 @@ private void showPlaylistDialog(Song song) {
             String selectedPlaylist = playlistList.get(which);
             // Xử lý khi người dùng chọn một playlist
             mDatabase.child(selectedPlaylist).push().setValue(song);
-
+            notifyDataSetChanged();
 
         }
     });
@@ -226,6 +309,7 @@ private void showPlaylistDialog(Song song) {
         });
     }
     private void updateListView() {
+        mDatabase= FirebaseDatabase.getInstance().getReference();
         // Lấy danh sách dữ liệu từ cơ sở dữ liệu Firebase và cập nhật lại adapter của ListView
         DatabaseReference songsRef = mDatabase.child("Song");
         songsRef.addValueEventListener(new ValueEventListener() {
@@ -245,6 +329,22 @@ private void showPlaylistDialog(Song song) {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Xảy ra lỗi trong quá trình truy vấn cơ sở dữ liệu
+            }
+        });
+    }
+    public void updateNewSong(Song song,String i){
+        mDatabase= FirebaseDatabase.getInstance().getReference();
+        DatabaseReference accounts = mDatabase.child("Song");
+        accounts.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                accounts.child(i).setValue(song);
+                notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
             }
         });
     }
