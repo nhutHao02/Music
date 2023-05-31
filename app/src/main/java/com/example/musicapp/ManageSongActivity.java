@@ -172,6 +172,7 @@ public class ManageSongActivity extends AppCompatActivity {
                 String key = String.format("%02d", count + 1); // Định dạng số thứ tự
                 // Thêm mới vào playlist
                 accounts.child(key).setValue(song);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

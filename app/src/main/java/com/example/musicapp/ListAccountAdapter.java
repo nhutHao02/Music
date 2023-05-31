@@ -91,7 +91,7 @@ public class ListAccountAdapter extends BaseAdapter {
         if(view==null){
             view=inflater.inflate(layout,null);
             //anh xa
-            holder.nameAccount      =(TextView) view.findViewById(R.id.nameAccount);
+            holder.nameAccount    =(TextView) view.findViewById(R.id.nameAccount);
             holder.btnDelete    =(ImageView) view.findViewById(R.id.btnDeleteAc);
             view.setTag(holder);
         }else {
@@ -127,7 +127,7 @@ public class ListAccountAdapter extends BaseAdapter {
             public void onClick(DialogInterface dialogInterface, int i) {
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
                 mDatabase.child("Accounts").child(id).removeValue();
-                notifyDataSetChanged();
+                notifyDataSetInvalidated();
                 alertDialog.setCancelable(true);
             }
         });
@@ -139,6 +139,9 @@ public class ListAccountAdapter extends BaseAdapter {
         });
 
         alertDialog.show();
+    }
+    public void reload(){
+        notifyDataSetChanged();
     }
 
 }

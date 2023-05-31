@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class ManageAccontActivity extends AppCompatActivity {
 
         adapter=new ListAccountAdapter(ManageAccontActivity.this,R.layout.row_account,listAccount);
         lv.setAdapter(adapter);
+        adapter.reload();
         btnAddAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,8 +98,8 @@ public class ManageAccontActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if((!user.getText().equals("")) && (!pass.getText().equals("")) && (!fullName.getText().equals(""))){
                     Account account = listAccount.get(i);
-
                     mDatabase.child("Accounts").child(String.valueOf(i)).setValue(account);
+                    dialog.dismiss();
                 }else {
                     Toast.makeText(ManageAccontActivity.this, "Enter Infomation", Toast.LENGTH_SHORT).show();
                 }
@@ -127,8 +129,20 @@ public class ManageAccontActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if((!user.getText().equals("")) && (!pass.getText().equals("")) && (!fullName.getText().equals(""))){
-                    Account account = new Account(user.getText().toString(), pass.getText().toString(),fullName.getText().toString(),null,null,null,null,null,null);
-                    mDatabase.child("Accounts").push().setValue(account);
+                    Account account = new Account(user.getText().toString(), pass.getText().toString(),fullName.getText().toString(),"null","null","null",new ArrayList<String>(),"null","null");
+                    mDatabase.child("Accounts").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            long count = snapshot.getChildrenCount();
+                            String key = String.format("%02d", count + 1);
+                            mDatabase.child("Accounts").child(key).setValue(account);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                     dialog.dismiss();
                 }else {
                     Toast.makeText(ManageAccontActivity.this, "Enter Infomation", Toast.LENGTH_SHORT).show();
@@ -173,5 +187,8 @@ public class ManageAccontActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void reSetView(){
+        adapter.notifyDataSetChanged();
     }
 }
