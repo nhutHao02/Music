@@ -1,5 +1,8 @@
 package com.example.musicapp;
 
+import java.lang.reflect.Array;
+import java.util.List;
+
 public class Account {
     private String name;
     private String email;
@@ -7,6 +10,9 @@ public class Account {
     private String sex;
     private String address;
     private String dob;
+    private List<String> myPlaylist;
+    private String history;
+    private String admin;
     public  Account(){
 
     }
@@ -17,6 +23,18 @@ public class Account {
         this.sex = sex;
         this.address = address;
         this.dob = dob;
+    }
+
+    public Account(String name, String email, String pass, String sex, String address, String dob, List<String> myPlaylist, String history, String admin) {
+        this.name = name;
+        this.email = email;
+        this.pass = pass;
+        this.sex = sex;
+        this.address = address;
+        this.dob = dob;
+        this.myPlaylist = myPlaylist;
+        this.history = history;
+        this.admin=admin;
     }
 
     public String getName() {
@@ -65,6 +83,30 @@ public class Account {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+    public List<String> getMyPlaylist() {
+        return myPlaylist;
+    }
+
+    public String getHistory() {
+        return history;
+    }
+
+    public void setMyPlaylist(List<String> myPlaylist) {
+        this.myPlaylist = myPlaylist;
+    }
+
+    public void setHistory(String history) {
+        this.history = history;
+    }
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 
     @Override

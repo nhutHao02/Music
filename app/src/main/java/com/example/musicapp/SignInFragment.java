@@ -1,6 +1,7 @@
 package com.example.musicapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,12 +18,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SignInFragment extends AppCompatActivity {
     DatabaseReference mDatabase;
     private EditText editTextEmail,editTextPassword;
+    boolean isAccountFound = false;
     ArrayList<Account> listAccounts = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,7 @@ public class SignInFragment extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         setContentView(R.layout.fragment_sign_in);
         Button sigin = findViewById(R.id.button3);
-        loadAccounts();
+        loadAccountsI();
         editTextEmail = findViewById(R.id.editTextTextEmailAddress);
         editTextPassword = findViewById(R.id.editTextTextPassword);
         sigin.setOnClickListener(new View.OnClickListener() {
@@ -93,12 +98,52 @@ public class SignInFragment extends AppCompatActivity {
             }
         });
     }
+    private void loadAccountsI() {
+
+        mDatabase.child("Accounts").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot accountSnapshot : dataSnapshot.getChildren()) {
+                    String address = accountSnapshot.child("address").getValue(String.class);
+                    String dob = accountSnapshot.child("dob").getValue(String.class);
+                    String email = accountSnapshot.child("email").getValue(String.class);
+                    String myHistory = accountSnapshot.child("myHistory").getValue(String.class);
+                    List<String> myList = new ArrayList<>();
+                    DataSnapshot myListSnapshot = accountSnapshot.child("myList");
+                    for (DataSnapshot itemSnapshot : myListSnapshot.getChildren()) {
+                        String item = itemSnapshot.getValue(String.class);
+                        myList.add(item);
+                    }
+                    String name = accountSnapshot.child("name").getValue(String.class);
+                    String pass = accountSnapshot.child("pass").getValue(String.class);
+                    String sex = accountSnapshot.child("sex").getValue(String.class);
+                    String ad = accountSnapshot.child("ad").getValue(String.class);
+
+                    Account account = new Account(name,email,pass,sex,address,dob,myList,myHistory,ad);
+                    listAccounts.add(account);
+                }
+            }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Xử lý lỗi (nếu có)
+                    }
+                });
+    }
     private boolean isValidAccount(String email, String password) {
         for (Account account : listAccounts) {
             if (account.getEmail().equals(email) && account.getPass().equals(password)) {
+                SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                // Chuyển đối tượng thành chuỗi JSON
+                Gson gson = new Gson();
+                String accountJson = gson.toJson(account);
+                editor.putString("account", accountJson);
+                editor.apply();
                 return true;
             }
         }
         return false;
     }
+
 }

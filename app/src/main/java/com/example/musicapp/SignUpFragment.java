@@ -72,14 +72,14 @@ public class SignUpFragment extends AppCompatActivity {
                 return false;
             }
         }
-        DatabaseReference accounts = mDatabase.child("Account");
+        DatabaseReference accounts = mDatabase.child("Accounts");
         accounts.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 long count = dataSnapshot.getChildrenCount(); // Lấy số lượng child nodes hiện tại
                 String key = String.format("%02d", count + 1); // Định dạng số thứ tự
                 // Tạo đối tượng Account
-                Account account = new Account(email, password,username,null,null,null);
+                Account account = new Account(email, password,username,null,null,null,null,null,null);
 
                 // Thêm mới vào playlist
                 accounts.child(key).setValue(account);

@@ -73,8 +73,15 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(SearchActivity.this,ListSongActivity.class)
-                        .putExtra("NAMELIST","myFavorites").putExtra("NAMEMENU","EDM")
+                        .putExtra("NAMELIST","EDM").putExtra("NAMEMENU","EDM")
                         .putExtra("ly","SearchActivity"));
+            }
+        });
+        nhacDance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SearchActivity.this,ListSongActivity.class)
+                        .putExtra("NAMELIST","Dance").putExtra("NAMEMENU","DANCE").putExtra("ly","SearchActivity"));
             }
         });
         nhacJazz.setOnClickListener(new View.OnClickListener() {
@@ -109,14 +116,14 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(SearchActivity.this,ListSongActivity.class)
-                        .putExtra("NAMELIST","myFavorites").putExtra("NAMEMENU","Top J-Pop").putExtra("ly","SearchActivity"));
+                        .putExtra("NAMELIST","topJPop").putExtra("NAMEMENU","Top J-Pop").putExtra("ly","SearchActivity"));
             }
         });
         topEDM.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(SearchActivity.this,ListSongActivity.class)
-                        .putExtra("NAMELIST","myFavorites").putExtra("NAMEMENU","Top EDM").putExtra("ly","SearchActivity"));
+                        .putExtra("NAMELIST","topEDM").putExtra("NAMEMENU","Top EDM").putExtra("ly","SearchActivity"));
             }
         });
         topUSUK.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +144,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(SearchActivity.this,ListSongActivity.class)
-                        .putExtra("NAMELIST","myFavorites").putExtra("NAMEMENU","Tracks").putExtra("ly","SearchActivity"));
+                        .putExtra("NAMELIST","topTracks").putExtra("NAMEMENU","Tracks").putExtra("ly","SearchActivity"));
             }
         });
         seeMoreNewTracks.setOnClickListener(new View.OnClickListener() {
@@ -224,45 +231,37 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String keyword = searchEditText.getText().toString();
+                supSearch(keyword);
+            }
+        });
 
-                // Tạo một tham chiếu đến nút myFavorites trong Firebase Realtime Database
-                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("myFavorites");
+    }
+    private void supSearch(String txt){
+        mDatabase.child("myFavorites").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot songSnapshot:snapshot.getChildren()) {
+                    Song songs=songSnapshot.getValue(Song.class);
+                    if(songs.getNameSong().toUpperCase().contains((txt.toUpperCase()))){
+                        listSearch.add(songs);
 
-                // Sử dụng phương thức orderByChild và startAt để tìm kiếm bài hát theo tên
-                Query query = databaseRef.orderByChild("nameSong").startAt(keyword).endAt(keyword + "\uf8ff");
-
-                ((Query) query).addValueEventListener(new ValueEventListener() {
-                    
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // Xử lý kết quả tìm kiếm
-
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            // Lấy dữ liệu bài hát từ DataSnapshot
-                            String songName = dataSnapshot.child("nameSong").getValue(String.class);
-                            String author = dataSnapshot.child("author").getValue(String.class);
-                            String img = dataSnapshot.child("img").getValue(String.class);
-                            String link = dataSnapshot.child("link").getValue(String.class);
-
-                            Song s=new Song(img,link,songName,author);
-                            listSearch.add(s);
-                        }
-                        if (listSearch.size()==0){
-                            Toast.makeText(SearchActivity.this, "Song is not available", Toast.LENGTH_SHORT).show();
-                        }
-                        if (listSearch.size()>0){
-                            startActivity(new Intent(SearchActivity.this,ListSongActivity.class)
-                                    .putExtra("ListSearch", (Serializable) listSearch).putExtra("NAMEMENU","Search")
-                                    .putExtra("ly","SearchActivity"));
-                        }
                     }
+                }
+                searchEditText.setText("");
+                if (listSearch.size()==0){
+                    Toast.makeText(SearchActivity.this, "Song is not available", Toast.LENGTH_SHORT).show();
+                }
+                if (listSearch.size()>0){
+                    startActivity(new Intent(SearchActivity.this,ListSongActivity.class)
+                            .putExtra("ListSearch", (Serializable) listSearch).putExtra("NAMEMENU","Search")
+                            .putExtra("ly","SearchActivity"));
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        // Xử lý khi có lỗi xảy ra
-//                        Toast.makeText(SearchActivity.this, "Song is not available", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
 

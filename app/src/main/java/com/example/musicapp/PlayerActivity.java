@@ -2,6 +2,7 @@ package com.example.musicapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -16,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -37,6 +41,7 @@ public class PlayerActivity extends AppCompatActivity {
     Animation animation;
     boolean repeat,shuffle;
     Handler handler;
+    DatabaseReference mDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +63,8 @@ public class PlayerActivity extends AppCompatActivity {
         //set thong tin bai hat
         setInfo();
         animation= AnimationUtils.loadAnimation(PlayerActivity.this,R.anim.disc_rotate);
+        //Luu vào his
+        saveHis();
         // khoi tao mediaPlayer
         initMediaPlayer();
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -197,6 +204,19 @@ public class PlayerActivity extends AppCompatActivity {
         });
 
     }
+
+    private void saveHis() {
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String accountJson = preferences.getString("account", "");
+        Gson gson = new Gson();
+        Account restoredAccount = gson.fromJson(accountJson, Account.class);
+        if(restoredAccount!=null){
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            mDatabase.child(restoredAccount.getHistory()).push().setValue(myListSong.get(pos));
+        }
+
+    }
+
     private void updateTime(){
         handler=new Handler();
         handler.postDelayed(new Runnable() {

@@ -51,7 +51,7 @@ public class ManageSongActivity extends AppCompatActivity {
     List<Song> songList=new ArrayList<Song>();
     ListView lvSong;
     ListViewSongAdapter adapter=null;
-    LinearLayout lyMore, lySearch, lyPlaylist;
+    LinearLayout lyMore, lyMangeAccount;
     EditText editTextSongName, editTextImgName,editTextLinkName,editTextAuthorName;
     Button addSong;
     ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -103,28 +103,20 @@ public class ManageSongActivity extends AppCompatActivity {
                 });
 
 
-        ImageView listPlay = (ImageView) findViewById(R.id.icPlayList);
-        listPlay.setOnClickListener(new AdapterView.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                // Tạo Intent để chuyển đến Activity mục tiêu
-                Intent intent = new Intent(ManageSongActivity.this, PlayListActivity.class);
-                // Chuyển đến Activity mục tiêu
-                startActivity(intent);
-            }
-        });
+
         lyMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(ManageSongActivity.this, MoreActivity.class));
             }
         });
-        lySearch.setOnClickListener(new View.OnClickListener() {
+        lyMangeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ManageSongActivity.this, SearchActivity.class));
+                startActivity(new Intent(ManageSongActivity.this, ManageAccontActivity.class));
             }
         });
+
     }
 
     private void loadSongHistorys() {
@@ -286,8 +278,7 @@ public class ManageSongActivity extends AppCompatActivity {
     private void anhXa() {
         lvSong=(ListView) findViewById(R.id.listViewId);
         lyMore=(LinearLayout) findViewById(R.id.lyMore);
-        lySearch=(LinearLayout) findViewById(R.id.lySearch);
-        lyPlaylist=(LinearLayout) findViewById(R.id.lyPlayList);
+        lyMangeAccount=(LinearLayout) findViewById(R.id.lyManageAcount);
 
     }
     private void saveImageToDatabase(Uri imageUri) {

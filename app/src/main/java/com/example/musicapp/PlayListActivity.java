@@ -3,6 +3,7 @@ package com.example.musicapp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -122,7 +124,13 @@ public class PlayListActivity extends AppCompatActivity {
         });
     }
     private void loadLists() {
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String accountJson = preferences.getString("account", "");
+        Gson gson = new Gson();
+        Account restoredAccount = gson.fromJson(accountJson, Account.class);
+        if(restoredAccount!=null){
 
+        }
         mDatabase.child("playList").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
