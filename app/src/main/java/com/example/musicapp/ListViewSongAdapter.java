@@ -120,6 +120,7 @@ public class ListViewSongAdapter extends BaseAdapter {
         holder.nameSong.setSelected(true);
         holder.nameSong.setText(song.getNameSong());
         holder.author.setText(song.getAuthor());
+//       Picasso.get().load(song.getImg()).into(holder.img);
         if(holder.img != null){
             Picasso.get().load(song.getImg()).into(holder.img);
         }

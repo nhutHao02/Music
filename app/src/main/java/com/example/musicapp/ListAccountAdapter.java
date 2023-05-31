@@ -78,6 +78,7 @@ public class ListAccountAdapter extends BaseAdapter {
     private class ViewHolder{
 
         TextView nameAccount;
+        ImageView btnDelete;
 
 
     }
@@ -91,6 +92,7 @@ public class ListAccountAdapter extends BaseAdapter {
             view=inflater.inflate(layout,null);
             //anh xa
             holder.nameAccount      =(TextView) view.findViewById(R.id.nameAccount);
+            holder.btnDelete    =(ImageView) view.findViewById(R.id.btnDeleteAc);
             view.setTag(holder);
         }else {
             holder= (ViewHolder) view.getTag();
@@ -98,7 +100,45 @@ public class ListAccountAdapter extends BaseAdapter {
 
         //gan gia tri
             holder.nameAccount.setText(listAccount.get(i).getEmail());
+            holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String index="";
+                    if (i<9){
+                        index+="0"+(i+1);
+                    }else {
+                        index+=(i+1);
+                    }
+                    DialogMsg("You want delete account ?",index);
+                }
+            });
+
+
+
         return view;
+    }
+    private void DialogMsg(String msg,String id){
+        AlertDialog.Builder alertDialog=new AlertDialog.Builder(context);
+        alertDialog.setIcon(R.mipmap.ic_launcher);
+        alertDialog.setTitle("Notification");
+        alertDialog.setMessage(msg);
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                mDatabase.child("Accounts").child(id).removeValue();
+                notifyDataSetChanged();
+                alertDialog.setCancelable(true);
+            }
+        });
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertDialog.setCancelable(true);
+            }
+        });
+
+        alertDialog.show();
     }
 
 }

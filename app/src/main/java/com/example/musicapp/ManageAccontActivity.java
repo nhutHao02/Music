@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +29,7 @@ import java.util.List;
 public class ManageAccontActivity extends AppCompatActivity {
     ListAccountAdapter adapter=null;
     List<Account> listAccount=new ArrayList<Account>();
+    LinearLayout lyManageSong, lyMore;
     DatabaseReference mDatabase;
     ImageView btnAddAccount;
     @Override
@@ -36,6 +39,8 @@ public class ManageAccontActivity extends AppCompatActivity {
         LinearLayout lyMore=(LinearLayout) findViewById(R.id.lyMoreMan);
         LinearLayout lyManageSong=(LinearLayout) findViewById(R.id.lyManageSong);
         ListView lv=(ListView) findViewById(R.id.listViewId);
+        lyMore=(LinearLayout) findViewById(R.id.lyMoreMan);
+        lyManageSong=(LinearLayout) findViewById(R.id.lyManageSong);
         btnAddAccount=(ImageView) findViewById(R.id.btnAddAccount); 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         loadAccount();
@@ -48,11 +53,29 @@ public class ManageAccontActivity extends AppCompatActivity {
                 DialogAddAcc();
             }
         });
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                DialogEditAcc(i+1,listAccount);
+            }
+        });
+        lyManageSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ManageAccontActivity.this, ManageSongActivity.class));
+            }
+        });
+        lyMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ManageAccontActivity.this, MoreActivity.class));
+            }
+        });
+
 
     }
-
-    private void DialogAddAcc() {
-        Dialog dialog=new Dialog(this);
+    private void DialogEditAcc(int i, List<Account> list) {
+        Dialog dialog=new Dialog(ManageAccontActivity.this);
         dialog.setContentView(R.layout.dialog_add_account);
         dialog.setCanceledOnTouchOutside(false);
         // map
@@ -60,15 +83,53 @@ public class ManageAccontActivity extends AppCompatActivity {
         EditText pass=(EditText) dialog.findViewById(R.id.txtPass);
         EditText fullName=(EditText) dialog.findViewById(R.id.txtFullName);
         Button btnAdd=(Button) dialog.findViewById(R.id.btnAddAccount);
-        Button btnCancel=(Button) dialog.findViewById(R.id.btnAddAccount);
+        Button btnCancel=(Button) dialog.findViewById(R.id.btnCancelAddAccount);
+
+
+        user.setText(list.get(i).getEmail());
+        pass.setText(list.get(i).getPass());
+        fullName.setText(list.get(i).getName());
+        //event
+        btnAdd.setText("Update");
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if((!user.getText().equals("")) && (!pass.getText().equals("")) && (!fullName.getText().equals(""))){
+                    Account account = listAccount.get(i);
+
+                    mDatabase.child("Accounts").child(String.valueOf(i)).setValue(account);
+                }else {
+                    Toast.makeText(ManageAccontActivity.this, "Enter Infomation", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+    private void DialogAddAcc() {
+        Dialog dialog=new Dialog(ManageAccontActivity.this);
+        dialog.setContentView(R.layout.dialog_add_account);
+        dialog.setCanceledOnTouchOutside(false);
+        // map
+        EditText user=(EditText) dialog.findViewById(R.id.txtUser);
+        EditText pass=(EditText) dialog.findViewById(R.id.txtPass);
+        EditText fullName=(EditText) dialog.findViewById(R.id.txtFullName);
+        Button btnAdd=(Button) dialog.findViewById(R.id.btnAddAccount);
+        Button btnCancel=(Button) dialog.findViewById(R.id.btnCancelAddAccount);
         //event
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if((!user.getText().equals("")) && (!pass.getText().equals("")) && (!fullName.getText().equals(""))){
-                    Account account = new Account(user.toString(), pass.toString(),fullName.toString(),null,null,null,null,null,null);
+                    Account account = new Account(user.getText().toString(), pass.getText().toString(),fullName.getText().toString(),null,null,null,null,null,null);
                     mDatabase.child("Accounts").push().setValue(account);
+                    dialog.dismiss();
                 }else {
                     Toast.makeText(ManageAccontActivity.this, "Enter Infomation", Toast.LENGTH_SHORT).show();
                 }
