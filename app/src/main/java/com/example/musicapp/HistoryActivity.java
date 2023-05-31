@@ -58,7 +58,7 @@ public class HistoryActivity extends AppCompatActivity {
 
                 startActivity(new Intent(HistoryActivity.this,PlayerActivity.class)
                         .putExtra("MyListSong", (Serializable) myFavorites)
-                        .putExtra("pos",i).putExtra("Activity","com.example.musicapp.MainActivity"));
+                        .putExtra("pos",i).putExtra("Activity","com.example.musicapp.MoreActivity"));
 
             }
         });
