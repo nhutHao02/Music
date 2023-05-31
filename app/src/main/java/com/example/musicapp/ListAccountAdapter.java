@@ -110,6 +110,7 @@ public class ListAccountAdapter extends BaseAdapter {
                         index+=(i+1);
                     }
                     DialogMsg("You want delete account ?",index);
+                    notifyDataSetChanged();
                 }
             });
 
@@ -127,7 +128,7 @@ public class ListAccountAdapter extends BaseAdapter {
             public void onClick(DialogInterface dialogInterface, int i) {
                 DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
                 mDatabase.child("Accounts").child(id).removeValue();
-                notifyDataSetInvalidated();
+                notifyDataSetChanged();
                 alertDialog.setCancelable(true);
             }
         });

@@ -62,7 +62,7 @@ public class SignUpFragment extends AppCompatActivity {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString();
         String confirm = editConfirmPassword.getText().toString();
-        if(password.equals(confirm)){
+        if(!password.equals(confirm)){
             Toast.makeText(this, "Password không khớp", Toast.LENGTH_SHORT).show();
             return false;
         }

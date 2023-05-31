@@ -129,46 +129,10 @@ public class PlayListActivity extends AppCompatActivity {
         Gson gson = new Gson();
         Account restoredAccount = gson.fromJson(accountJson, Account.class);
         if(restoredAccount!=null){
+            for(int i = 0; i<restoredAccount.getMyPlaylist().size();i++){
 
+            }
         }
-        mDatabase.child("playList").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                numChildren++;
-                String playlistKey = snapshot.getKey(); // Lấy mã của playlist
-                Map<String, Object> playlistData = (Map<String, Object>) snapshot.getValue();
-                String nameList = (String) playlistData.get("nameList"); // Lấy giá trị của thuộc tính "nameList"
-                System.out.println("Key: " + playlistKey + ", Name: " + nameList);
-                nameLPlayList.add(nameList);
-                // Kiểm tra xem đã lấy được tất cả dữ liệu playlists chưa
-                System.out.println("s"+nameLPlayList.size());
-                System.out.println("c"+ numChildren);
-                if (nameLPlayList.size() == numChildren) {
-                    System.out.println("Load");
-                    loadSongs(numChildren);
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                numChildren--;
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
 
 
 
